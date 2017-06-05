@@ -31,13 +31,23 @@ public class TextUtil {
 	}
 
 	/*
-	 * 形如bAb，b=空 param=
+	 * 形如bAb，b=空 
 	 */
 	public static boolean containbA_bIsNull(TreeSet<Character> nvset,
 			String itemCharStr, Character c,
 			HashMap<Character, ArrayList<Character>> experssionMap) {
 
 		String aStr = c.toString();
+		if (containsAB(nvset, itemCharStr, c)) {
+			Character aLast=getA_lastChar(itemCharStr, c);
+			System.out.println("++++++++++"+experssionMap.toString());
+			ArrayList<Character> list=experssionMap.get(aLast);
+			if (list.contains("ε")) {
+				System.out.println("该集合包含空字符");
+				return true;
+			}
+		}
+		return false;
 		
 
 	}
@@ -55,8 +65,7 @@ public class TextUtil {
 	}
 
 	public static boolean containsAb(TreeSet<Character> ntset,
-			String itemCharStr, Character c,
-			HashMap<Character, ArrayList<Character>> expressionMap) {
+			String itemCharStr, Character c) {
 
 		String aStr = c.toString();
 
