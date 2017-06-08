@@ -35,13 +35,13 @@ public class TextUtil {
 	 */
 	public static boolean containbA_bIsNull(TreeSet<Character> nvset,
 			String itemCharStr, Character c,
-			HashMap<Character, ArrayList<Character>> experssionMap) {
+			HashMap<Character, ArrayList<String>> experssionMap) {
 
 		String aStr = c.toString();
 		if (containsAB(nvset, itemCharStr, c)) {
 			Character aLast=getA_lastChar(itemCharStr, c);
 			System.out.println("++++++++++"+experssionMap.toString());
-			ArrayList<Character> list=experssionMap.get(aLast);
+			ArrayList<String> list=experssionMap.get(aLast);
 			if (list.contains("ε")) {
 				System.out.println("该集合包含空字符");
 				return true;

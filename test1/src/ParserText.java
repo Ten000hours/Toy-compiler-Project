@@ -293,6 +293,39 @@ public class ParserText implements Serializable {
 
 	public void getSelect() {// 获取select集
 
+		Set<Character> keyset=expressionMap.keySet();
+		for (Character selectkey : keyset) {
+			ArrayList<String> arraylist=expressionMap.get(selectkey);
+			HashMap<String, TreeSet<Character>> selectitemmap=new HashMap<String, TreeSet<Character>>();
+			for (String selectStr : arraylist) {
+				 /** 
+                 * 存放select结果的集合 
+                 */  
+                TreeSet<Character> selectSet = new TreeSet<Character>();  
+                // set里存放的数据分3种情况,由selectExp决定  
+                // 1.A->ε,=follow(A)  
+                if (TextUtil.isEmptyStart(selectStr)) {  
+                    selectSet = followMap.get(selectkey);  
+                    selectSet.remove('ε');  
+                    selectitemmap.put(selectStr, selectSet);  
+                }  
+                // 2.Nt开始,=Nt  
+                // <br>终结符开始  
+                if (TextUtil.isNtStart(ntSet, selectStr)) {  
+                    selectSet.add(selectStr.charAt(0));  
+                    selectSet.remove('ε');  
+                    selectitemmap.put(selectStr, selectSet);  
+                }  
+                // 3.Nv开始，=first(Nv)  
+                if (TextUtil.isNvStart(nvSet, selectStr)) {  
+                    selectSet = firstMap.get(selectkey);  
+                    selectSet.remove('ε');  
+                    selectitemmap.put(selectStr, selectSet);  
+                }  
+                selectMap.put(selectkey, selectitemmap);  
+			}
+			
+		}
 	}
 
 	public void calculFollow(Character putcharitem, Character charitem,
@@ -310,6 +343,53 @@ public class ParserText implements Serializable {
 			followMap.put(keycharitem, itemset);
 		}
 		if (TextUtil.containsAB(nvSet, itemcharstr, charitem)) {
+			Character last_char = TextUtil.getA_lastChar(itemcharstr, charitem);
+			System.out.println(" find AB: " + itemcharstr + " " + charitem
+					+ " =first(" + last_char + ")");
+			TreeSet<Character> last_char_first = firstMap.get(last_char);
+			itemset.addAll(last_char_first);
+			if (last_char_first.contains("ε")) {
+				itemset.add('#');
+			}
+			itemset.remove("ε");
+			followMap.put(putcharitem, itemset);
+
+			if (TextUtil.containbA_bIsNull(nvSet, itemcharstr, putcharitem,
+					expressionMap)) {
+
+				char tmp_char = TextUtil.getA_lastChar(itemcharstr, charitem);
+				System.out.println("temp char:" + tmp_char + " key"
+						+ keycharitem);
+				if (!keycharitem.equals(charitem)) {
+					Set<Character> keyset = expressionMap.keySet();
+					for (Character keyCharItem : keyset) {
+						ArrayList<String> charItemArray = expressionMap
+								.get(keyCharItem);
+						for (String charitemarray_string : charItemArray) {
+							calculFollow(putcharitem, keycharitem, keyCharItem,
+									itemcharstr, itemset);
+						}
+					}
+				}
+			}
+
+		}
+		if (TextUtil.containsbA(ntSet, itemcharstr, charitem, expressionMap)) {
+			if (!keycharitem.equals(charitem)) {
+				System.out.println("---------------find bA: " + keycharitem
+						+ "   " + itemcharstr + "    " + charitem
+						+ "   =Follow(" + keycharitem + ")");
+				Set<Character> keySet = expressionMap.keySet();
+				for (Character keyCharItems : keySet) {
+					ArrayList<String> charItemArray = expressionMap
+							.get(keyCharItems);
+					for (String itemCharStrs : charItemArray) {
+						calculFollow(putcharitem, keycharitem, keyCharItems,
+								itemCharStrs, itemset);
+
+					}
+				}
+			}
 
 		}
 	}
@@ -337,9 +417,6 @@ public class ParserText implements Serializable {
 		return null;
 	}
 
-	public void calculSelect() {// 计算select集
-
-	}
 
 	public void getAnalyTable() {// 获取分析表
 
