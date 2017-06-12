@@ -72,6 +72,15 @@ public class ParserText implements Serializable {
 	 * LL（1）文法产生集合
 	 */
 	private ArrayList<String> gsArray;
+	public TreeMap<Character, HashMap<String, TreeSet<Character>>> getSelectMap() {
+		return selectMap;
+	}
+
+	public void setSelectMap(
+			TreeMap<Character, HashMap<String, TreeSet<Character>>> selectMap) {
+		this.selectMap = selectMap;
+	}
+
 	/**
 	 * 表达式集合
 	 */

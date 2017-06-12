@@ -75,7 +75,7 @@ public class TextUtil {
 			try {
 				findSTR = itemCharStr.substring(aIndex + 1, aIndex + 2);
 			} catch (Exception e) {
-				e.printStackTrace();
+				return false;
 			}
 			if (ntset.contains(findSTR.charAt(0))) {
 				return true;
@@ -91,7 +91,13 @@ public class TextUtil {
 		String atr = c.toString();
 		if (itemCharStr.contains(atr)) {
 			int index = itemCharStr.indexOf(atr);
-			String sub = itemCharStr.substring(index + 1, index + 2);
+			String sub;
+			try {
+				sub = itemCharStr.substring(index + 1, index + 2);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
 			return sub.charAt(0);
 		}
 		return null;
@@ -148,18 +154,21 @@ public class TextUtil {
 	public static String findUseExp(
 			TreeMap<Character, HashMap<String, TreeSet<Character>>> selectMap,
 			Character peek, char charat) {
-		HashMap<String, TreeSet<Character>> Hmap=selectMap.get(peek);
 		try {
+			HashMap<String, TreeSet<Character>> Hmap=selectMap.get(peek);
 			Set<String> Exp=Hmap.keySet();
+			//System.out.println("exp "+Exp);
 			for (String useExp : Exp) {
 				TreeSet<Character> ts=Hmap.get(useExp);
+				//System.out.println("useexp:"+useExp+" charat :"+charat+" ts "+ts);
 				if (ts.contains(charat)) {
 					return useExp;
 				}
+				//System.out.println("-------------------------");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
 		return null;
 	}
