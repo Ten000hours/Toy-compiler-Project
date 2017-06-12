@@ -153,7 +153,7 @@ public class TextUtil {
      */ 
 	public static String findUseExp(
 			TreeMap<Character, HashMap<String, TreeSet<Character>>> selectMap,
-			Character peek, char charat) {
+			Character peek, Character charat) {
 		try {
 			HashMap<String, TreeSet<Character>> Hmap=selectMap.get(peek);
 			Set<String> Exp=Hmap.keySet();
